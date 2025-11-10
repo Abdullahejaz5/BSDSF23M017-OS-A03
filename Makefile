@@ -1,24 +1,19 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g -Iinclude
-
+LDFLAGS = -lreadline
 SRC = src/main.c src/shell.c src/execute.c
-OBJ_DIR = obj
-BIN_DIR = bin
-OBJS = $(OBJ_DIR)/main.o $(OBJ_DIR)/shell.o $(OBJ_DIR)/execute.o
-TARGET = $(BIN_DIR)/myshell
+OBJ = obj/main.o obj/shell.o obj/execute.o
+BIN = bin/myshell
 
-all: $(TARGET)
+all: $(BIN)
 
-$(TARGET): $(OBJS)
-	@mkdir -p $(BIN_DIR)
-	$(CC) $(CFLAGS) $(OBJS) -o $(TARGET)
+$(BIN): $(OBJ)
+	@mkdir -p bin
+	$(CC) $(CFLAGS) $(OBJ) -o $(BIN) $(LDFLAGS)
 
-$(OBJ_DIR)/%.o: src/%.c
-	@mkdir -p $(OBJ_DIR)
+obj/%.o: src/%.c
+	@mkdir -p obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJ_DIR) $(BIN_DIR)
-
-run: all
-	./$(TARGET)
+	rm -rf obj bin
