@@ -14,6 +14,7 @@
 #define MAXARGS 20
 #define HISTORY_SIZE 20
 #define PROMPT "FCIT> "
+#define MAX_JOBS 50
 
 typedef struct {
     char *argv[MAXARGS];
@@ -21,7 +22,13 @@ typedef struct {
     char *outfile;
     int has_pipe;
     char *pipe_argv[MAXARGS];
+    int background;           // new flag for &
 } Command;
+
+typedef struct {
+    pid_t pid;
+    char  cmdline[MAX_LEN];
+} Job;
 
 // core
 char *read_cmd(char *prompt, FILE *fp);
@@ -33,5 +40,10 @@ int handle_builtin(char **arglist);
 void add_to_history(const char *cmd);
 void show_history(void);
 char *get_history_command(int n);
+
+// jobs
+void add_job(pid_t pid, const char *cmdline);
+void check_jobs(void);
+void show_jobs(void);
 
 #endif

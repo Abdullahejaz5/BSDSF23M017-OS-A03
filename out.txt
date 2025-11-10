@@ -1,0 +1,8 @@
+bin
+files.txt
+include
+Makefile
+obj
+out.txt
+README.md
+src
