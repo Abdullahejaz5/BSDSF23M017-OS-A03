@@ -60,3 +60,44 @@ char** tokenize(char* cmdline) {
     arglist[argnum] = NULL;
     return arglist;
 }
+
+int handle_builtin(char **arglist) {
+    if (arglist == NULL || arglist[0] == NULL)
+        return 0;
+
+    // exit command
+    if (strcmp(arglist[0], "exit") == 0) {
+        printf("Exiting shell...\n");
+        exit(0);
+    }
+
+    // cd command
+    else if (strcmp(arglist[0], "cd") == 0) {
+        char *path = arglist[1];
+        if (path == NULL) {
+            path = getenv("HOME");
+        }
+        if (chdir(path) != 0) {
+            perror("cd failed");
+        }
+        return 1; // handled
+    }
+
+    // help command
+    else if (strcmp(arglist[0], "help") == 0) {
+        printf("Built-in commands:\n");
+        printf("  cd [dir]   - change directory\n");
+        printf("  exit       - exit the shell\n");
+        printf("  help       - display this help\n");
+        printf("  jobs       - list background jobs\n");
+        return 1;
+    }
+
+    // jobs command (placeholder)
+    else if (strcmp(arglist[0], "jobs") == 0) {
+        printf("No background jobs implemented yet.\n");
+        return 1;
+    }
+
+    return 0; // not a built-in
+}
