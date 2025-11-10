@@ -4,28 +4,36 @@ int main() {
     char* cmdline;
     char** arglist;
 
-    while ((cmdline = read_cmd(PROMPT, stdin)) != NULL) {
+    while ((cmdline = readline(PROMPT)) != NULL) {
+        // Skip empty inputs
+        if (strlen(cmdline) == 0) {
+            free(cmdline);
+            continue;
+        }
 
-        // Handle !n before adding to history
+        // Handle !n re-execution
         if (cmdline[0] == '!') {
             int n = atoi(cmdline + 1);
-            char* prev_cmd = get_history_command(n);
-            if (prev_cmd == NULL) {
+            HIST_ENTRY **the_list = history_list();
+            if (!the_list || n <= 0 || n > history_length) {
                 printf("No such command in history.\n");
                 free(cmdline);
                 continue;
             } else {
+                // Get nth history command (1-indexed)
+                char* prev_cmd = the_list[n - 1]->line;
                 printf("%s\n", prev_cmd);
                 free(cmdline);
                 cmdline = strdup(prev_cmd);
             }
         }
 
-        if ((arglist = tokenize(cmdline)) != NULL) {
-            // Add to history
+        // Add non-empty command to history
+        if (strlen(cmdline) > 0)
             add_history(cmdline);
 
-            // Built-in or external execution
+        // Tokenize and execute
+        if ((arglist = tokenize(cmdline)) != NULL) {
             if (!handle_builtin(arglist))
                 execute(arglist);
 
@@ -34,6 +42,7 @@ int main() {
                 free(arglist[i]);
             free(arglist);
         }
+
         free(cmdline);
     }
 
