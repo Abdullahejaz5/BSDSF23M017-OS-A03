@@ -178,10 +178,17 @@ int handle_builtin(char **arglist) {
             if (chdir(arglist[1]) != 0) perror("cd");
         }
         return 1;
-    } else if (strcmp(arglist[0], "help") == 0) {
-        printf("Built-ins: cd, exit, help, history, jobs, set\n");
+    }else if (strcmp(arglist[0], "help") == 0) {
+        printf("Built-ins:\n");
+        printf("  cd      - Change directory\n");
+        printf("  exit    - Exit shell\n");
+        printf("  help    - Show this help message\n");
+        printf("  history - Show history\n");
+        printf("  jobs    - Show background jobs\n");
+        printf("  set     - Show all shell variables (Feature-8)\n");
         return 1;
-    } else if (strcmp(arglist[0], "history") == 0) {
+    }
+     else if (strcmp(arglist[0], "history") == 0) {
         show_history();
         return 1;
     } else if (strcmp(arglist[0], "jobs") == 0) {
@@ -191,5 +198,6 @@ int handle_builtin(char **arglist) {
         print_vars();
         return 1;
     }
-    return 0;
-}
+
+    return 0;}
+
